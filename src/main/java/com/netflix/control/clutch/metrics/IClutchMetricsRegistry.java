@@ -17,6 +17,6 @@
 package com.netflix.control.clutch.metrics;
 
 public interface IClutchMetricsRegistry {
-    public default void reportOverProvisioned(String name) {}
-    public default void reportUnderProvisioned(String name) {}
+    default public void reportOverProvisioned(String name) {}
+    default public void reportUnderProvisioned(String name) {}
 }

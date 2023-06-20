@@ -117,9 +117,7 @@ public class ExperimentalControlLoop implements Observable.Transformer<Event, Do
                 .doOnNext(scale -> this.currentSize.set(Math.round(Math.ceil(scale))))
                 .doOnNext(__ -> deltaIntegrator.setSum(0))
                 .doOnNext(__ -> cooldownTimestamp.set(System.currentTimeMillis()))
-                .doOnUnsubscribe(() -> {
-                    sizeSub.unsubscribe();
-                });
+                .doOnUnsubscribe(sizeSub::unsubscribe);
     }
 
     /* For testing to trigger actuator on next event */
@@ -128,6 +126,7 @@ public class ExperimentalControlLoop implements Observable.Transformer<Event, Do
     }
 
     public static class DefaultRpsMetricComputer implements IRpsMetricComputer {
+        private static final long serialVersionUID = 1;
         private double lastLag = 0;
 
         public Double apply(ClutchConfiguration config, Map<Clutch.Metric, Double> metrics) {
@@ -142,6 +141,7 @@ public class ExperimentalControlLoop implements Observable.Transformer<Event, Do
     }
 
     public static class DefaultScaleComputer implements IScaleComputer {
+        private static final long serialVersionUID = 1;
         public Double apply(ClutchConfiguration config, Long currentScale, Double delta) {
             return Math.min(config.maxSize, Math.max(config.minSize, currentScale + delta));
         }
