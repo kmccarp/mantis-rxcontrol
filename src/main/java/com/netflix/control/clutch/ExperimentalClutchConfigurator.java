@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class ExperimentalClutchConfigurator implements Observable.Transformer<Event, ClutchConfiguration>  {
-    private static int DEFAULT_K = 1024;
+    private static int defaultK = 1024;
 
     private IClutchMetricsRegistry metricsRegistry;
     private final Observable<Long> timer;
@@ -38,14 +38,14 @@ public class ExperimentalClutchConfigurator implements Observable.Transformer<Ev
 
     private static ConcurrentHashMap<Clutch.Metric, UpdateDoublesSketch> sketches = new ConcurrentHashMap<>();
     static {
-        sketches.put(Clutch.Metric.CPU, UpdateDoublesSketch.builder().setK(DEFAULT_K).build());
-        sketches.put(Clutch.Metric.MEMORY, UpdateDoublesSketch.builder().setK(DEFAULT_K).build());
-        sketches.put(Clutch.Metric.NETWORK, UpdateDoublesSketch.builder().setK(DEFAULT_K).build());
-        sketches.put(Clutch.Metric.LAG, UpdateDoublesSketch.builder().setK(DEFAULT_K).build());
-        sketches.put(Clutch.Metric.DROPS, UpdateDoublesSketch.builder().setK(DEFAULT_K).build());
-        sketches.put(Clutch.Metric.UserDefined, UpdateDoublesSketch.builder().setK(DEFAULT_K).build());
-        sketches.put(Clutch.Metric.RPS, UpdateDoublesSketch.builder().setK(DEFAULT_K).build());
-        sketches.put(Clutch.Metric.SOURCEJOB_DROP, UpdateDoublesSketch.builder().setK(DEFAULT_K).build());
+        sketches.put(Clutch.Metric.CPU, UpdateDoublesSketch.builder().setK(defaultK).build());
+        sketches.put(Clutch.Metric.MEMORY, UpdateDoublesSketch.builder().setK(defaultK).build());
+        sketches.put(Clutch.Metric.NETWORK, UpdateDoublesSketch.builder().setK(defaultK).build());
+        sketches.put(Clutch.Metric.LAG, UpdateDoublesSketch.builder().setK(defaultK).build());
+        sketches.put(Clutch.Metric.DROPS, UpdateDoublesSketch.builder().setK(defaultK).build());
+        sketches.put(Clutch.Metric.UserDefined, UpdateDoublesSketch.builder().setK(defaultK).build());
+        sketches.put(Clutch.Metric.RPS, UpdateDoublesSketch.builder().setK(defaultK).build());
+        sketches.put(Clutch.Metric.SOURCEJOB_DROP, UpdateDoublesSketch.builder().setK(defaultK).build());
     }
 
     public ExperimentalClutchConfigurator(IClutchMetricsRegistry metricsRegistry, Observable<Long> timer,
@@ -85,7 +85,7 @@ public class ExperimentalClutchConfigurator implements Observable.Transformer<Ev
                 .filter(event -> event != null && event.metric != null)
                 .map(event -> {
                     UpdateDoublesSketch sketch = sketches.computeIfAbsent(event.metric, metric ->
-                            UpdateDoublesSketch.builder().setK(DEFAULT_K).build());
+                            UpdateDoublesSketch.builder().setK(defaultK).build());
                     sketch.update(event.value);
                     return null;
                 }).subscribe();
